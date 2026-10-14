@@ -7,7 +7,7 @@
   + Di chuyển vào thư mục lab2:
       cd lab2
   + Chạy lệnh:
-      dotnet run --project Lab02_OOPBasics/Lab02_OOPBasics.csproj
+      dotnet run --project lab2/Lab02_OOPBasics.csproj
 
 2. DANH SÁCH BÀI TẬP ĐÃ HOÀN THÀNH
 Tổ chức mã nguồn OOP chuẩn tách biệt các lớp vào từng file .cs riêng biệt:
