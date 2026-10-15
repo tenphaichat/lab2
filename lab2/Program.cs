@@ -7,7 +7,7 @@ namespace Lab02_OOPBasics
 {
     class Program
     {
-        // Danh sách sinh viên dùng chung cho các bài tập
+        // Danh sách sinh viên dùng chung
         static List<SinhVien> danhSachSV = new List<SinhVien>()
         {
             new SinhVien("SV01", "Phan Văn Thắng", new DateTime(2006, 3, 26), 8.5),
@@ -26,16 +26,16 @@ namespace Lab02_OOPBasics
             while (chon != 0)
             {
                 Console.WriteLine("\nCHƯƠNG TRÌNH THỰC HÀNH LAB 2");
-                Console.WriteLine("1. Khai báo lớp SinhVien và in thông tin");
+                Console.WriteLine("1. Nhập thông tin sinh viên và in thông tin (Lớp SinhVien)");
                 Console.WriteLine("2. Constructor và nạp chồng constructor");
-                Console.WriteLine("3. Đóng gói và kiểm tra tính hợp lệ dữ liệu");
+                Console.WriteLine("3. Đóng gói và kiểm tra tính hợp lệ dữ liệu (Properties)");
                 Console.WriteLine("4. Phương thức tính tuổi và xếp loại học tập");
                 Console.WriteLine("5. Quản lý danh sách List<SinhVien> và tìm kiếm");
-                Console.WriteLine("6. Lớp SanPham (Mã, tên, giá, số lượng, thành tiền)");
+                Console.WriteLine("6. Lớp SanPham (Nhập sản phẩm và tính thành tiền)");
                 Console.WriteLine("7. Lớp TaiKhoanNganHang (Nạp, rút, chuyển tiền)");
-                Console.WriteLine("8. Lớp NhanVien (Tính thực lĩnh và in bảng lương)");
-                Console.WriteLine("9. Lớp HinhChuNhat (Tính chu vi và diện tích)");
-                Console.WriteLine("10. Ứng dụng quản lý sinh viên Console hoàn chỉnh");
+                Console.WriteLine("8. Lớp NhanVien (Nhập nhân viên và tính lương)");
+                Console.WriteLine("9. Lớp HinhChuNhat (Nhập kích thước, tính chu vi và diện tích)");
+                Console.WriteLine("10. Ứng dụng quản lý sinh viên Console hoàn chỉnh (CRUD)");
                 Console.WriteLine("0. Thoát");
                 Console.Write("Mời bạn chọn bài (0-10): ");
 
@@ -94,30 +94,79 @@ namespace Lab02_OOPBasics
             }
         }
 
-        // Bài 1: Khai báo lớp SinhVien
+        // Bài 1: Cho người dùng nhập thông tin sinh viên từ bàn phím
         static void Bai1()
         {
             Console.WriteLine("Bài 1: Khai báo lớp SinhVien và in thông tin");
-            SinhVien sv = new SinhVien();
-            sv.MaSV = "SV01";
-            sv.HoTen = "Phan Văn Thắng";
-            sv.NgaySinh = new DateTime(2006, 3, 26);
-            sv.DiemTB = 8.5;
+            try
+            {
+                SinhVien sv = new SinhVien();
+                Console.Write("Nhập mã sinh viên (mặc định: SV01): ");
+                string? ma = Console.ReadLine();
+                sv.MaSV = string.IsNullOrWhiteSpace(ma) ? "SV01" : ma;
 
-            Console.WriteLine("Thông tin sinh viên vừa khởi tạo:");
-            sv.HienThi();
+                Console.Write("Nhập họ và tên (mặc định: Phan Văn Thắng): ");
+                string? ten = Console.ReadLine();
+                sv.HoTen = string.IsNullOrWhiteSpace(ten) ? "Phan Văn Thắng" : ten;
+
+                Console.Write("Nhập ngày sinh (dd/MM/yyyy, mặc định: 26/03/2006): ");
+                string? nsInput = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(nsInput))
+                {
+                    sv.NgaySinh = new DateTime(2006, 3, 26);
+                }
+                else
+                {
+                    sv.NgaySinh = DateTime.ParseExact(nsInput.Trim(), "dd/MM/yyyy", null);
+                }
+
+                Console.Write("Nhập điểm trung bình (0 - 10, mặc định: 8.5): ");
+                string? dtbInput = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(dtbInput))
+                {
+                    sv.DiemTB = 8.5;
+                }
+                else
+                {
+                    sv.DiemTB = double.Parse(dtbInput);
+                }
+
+                Console.WriteLine("\nThông tin sinh viên vừa nhập:");
+                sv.HienThi();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi nhập dữ liệu: " + ex.Message);
+            }
         }
 
-        // Bài 2: Constructor và nạp chồng
+        // Bài 2: Constructor và nạp chồng constructor
         static void Bai2()
         {
             Console.WriteLine("Bài 2: Constructor và nạp chồng constructor");
+            Console.WriteLine("1. Khởi tạo đối tượng bằng constructor mặc định (không tham số):");
             SinhVien sv1 = new SinhVien();
-            Console.WriteLine("1. Đối tượng khởi tạo bằng constructor mặc định:");
             sv1.HienThi();
 
-            SinhVien sv2 = new SinhVien("SV02", "Trần Thị Bình", new DateTime(2004, 9, 3), 7.5);
-            Console.WriteLine("2. Đối tượng khởi tạo bằng constructor có tham số:");
+            Console.WriteLine("\n2. Khởi tạo đối tượng bằng constructor có tham số:");
+            Console.Write("Nhập mã SV: ");
+            string ma = Console.ReadLine()!;
+            if (string.IsNullOrWhiteSpace(ma)) ma = "SV02";
+
+            Console.Write("Nhập họ tên: ");
+            string ten = Console.ReadLine()!;
+            if (string.IsNullOrWhiteSpace(ten)) ten = "Trần Thị Bình";
+
+            Console.Write("Nhập ngày sinh (dd/MM/yyyy): ");
+            string? nsStr = Console.ReadLine();
+            DateTime ns = string.IsNullOrWhiteSpace(nsStr) ? new DateTime(2004, 9, 3) : DateTime.ParseExact(nsStr, "dd/MM/yyyy", null);
+
+            Console.Write("Nhập điểm TB: ");
+            string? diemStr = Console.ReadLine();
+            double diem = string.IsNullOrWhiteSpace(diemStr) ? 7.5 : double.Parse(diemStr);
+
+            SinhVien sv2 = new SinhVien(ma, ten, ns, diem);
+            Console.WriteLine("\nKết quả tạo đối tượng với constructor có tham số:");
             sv2.HienThi();
         }
 
@@ -126,30 +175,37 @@ namespace Lab02_OOPBasics
         {
             Console.WriteLine("Bài 3: Đóng gói và kiểm tra dữ liệu");
             SinhVien sv = new SinhVien();
-            
-            Console.WriteLine("Thử nghiệm 1: Gán Họ tên hợp lệ và Điểm TB = 8.8:");
-            sv.HoTen = "Lê Hoàng Cường";
-            sv.DiemTB = 8.8;
-            Console.WriteLine("Gán thành công -> Họ tên: {0}, Điểm: {1}", sv.HoTen, sv.DiemTB);
 
-            Console.WriteLine("\nThử nghiệm 2: Gán Điểm TB không hợp lệ (12.5):");
+            Console.WriteLine("--- Nhập thử dữ liệu để kiểm tra tính năng đóng gói ---");
+            Console.Write("Nhập họ tên (thử để trống hoặc nhập chuỗi rỗng): ");
+            string? ten = Console.ReadLine();
             try
             {
-                sv.DiemTB = 12.5;
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine("Bắt ngoại lệ thành công: " + ex.Message);
-            }
-
-            Console.WriteLine("\nThử nghiệm 3: Gán Họ tên để trống (chuỗi rỗng):");
-            try
-            {
-                sv.HoTen = "   ";
+                sv.HoTen = ten!;
+                Console.WriteLine("Họ tên hợp lệ: " + sv.HoTen);
             }
             catch (ArgumentException ex)
             {
-                Console.WriteLine("Bắt ngoại lệ thành công: " + ex.Message);
+                Console.WriteLine("-> Bắt ngoại lệ họ tên: " + ex.Message);
+            }
+
+            Console.Write("\nNhập Điểm TB (thử nhập số < 0 hoặc > 10, ví dụ: 12.5): ");
+            string? diemStr = Console.ReadLine();
+            try
+            {
+                if (double.TryParse(diemStr, out double d))
+                {
+                    sv.DiemTB = d;
+                    Console.WriteLine("Điểm TB hợp lệ: " + sv.DiemTB);
+                }
+                else
+                {
+                    Console.WriteLine("Không phải định dạng số thực.");
+                }
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine("-> Bắt ngoại lệ điểm: " + ex.Message);
             }
         }
 
@@ -157,30 +213,51 @@ namespace Lab02_OOPBasics
         static void Bai4()
         {
             Console.WriteLine("Bài 4: Phương thức tính tuổi và xếp loại học tập");
-            SinhVien sv1 = new SinhVien("SV03", "Lê Hoàng Cường", new DateTime(2005, 1, 20), 9.2);
-            SinhVien sv2 = new SinhVien("SV04", "Phạm Minh Đức", new DateTime(2003, 11, 15), 4.8);
+            try
+            {
+                Console.Write("Nhập họ tên sinh viên: ");
+                string ten = Console.ReadLine()!;
+                if (string.IsNullOrWhiteSpace(ten)) ten = "Phan Văn Thắng";
 
-            Console.WriteLine("Sinh viên 1: {0} | Tuổi: {1} | Xếp loại: {2}", sv1.HoTen, sv1.TinhTuoi(), sv1.XepLoai());
-            Console.WriteLine("Sinh viên 2: {0} | Tuổi: {1} | Xếp loại: {2}", sv2.HoTen, sv2.TinhTuoi(), sv2.XepLoai());
+                Console.Write("Nhập ngày sinh (dd/MM/yyyy): ");
+                string? nsStr = Console.ReadLine();
+                DateTime ns = string.IsNullOrWhiteSpace(nsStr) ? new DateTime(2006, 3, 26) : DateTime.ParseExact(nsStr, "dd/MM/yyyy", null);
+
+                Console.Write("Nhập điểm trung bình (0 - 10): ");
+                string? dStr = Console.ReadLine();
+                double diem = string.IsNullOrWhiteSpace(dStr) ? 8.5 : double.Parse(dStr);
+
+                SinhVien sv = new SinhVien("SV_TEST", ten, ns, diem);
+                Console.WriteLine("\nKết quả xử lý nghiệp vụ:");
+                Console.WriteLine("Sinh viên: {0}", sv.HoTen);
+                Console.WriteLine("Ngày sinh: {0:dd/MM/yyyy}", sv.NgaySinh);
+                Console.WriteLine("Tuổi tính được: {0} tuổi", sv.TinhTuoi());
+                Console.WriteLine("Điểm trung bình: {0:N2}", sv.DiemTB);
+                Console.WriteLine("Xếp loại học lực: {0}", sv.XepLoai());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi: " + ex.Message);
+            }
         }
 
         // Bài 5: Quản lý danh sách List<SinhVien> và tìm kiếm
         static void Bai5()
         {
             Console.WriteLine("Bài 5: Quản lý danh sách List<SinhVien> và tìm kiếm");
-            Console.WriteLine("Danh sách sinh viên mẫu:");
+            Console.WriteLine("Danh sách sinh viên hiện có:");
             foreach (var sv in danhSachSV)
             {
                 sv.HienThi();
             }
 
-            Console.Write("\nNhập mã sinh viên cần tìm (ví dụ SV01): ");
+            Console.Write("\nNhập mã sinh viên bạn muốn tìm (ví dụ: SV01): ");
             string? ma = Console.ReadLine();
             SinhVien? ketQua = danhSachSV.Find(x => x.MaSV.Equals(ma?.Trim(), StringComparison.OrdinalIgnoreCase));
 
             if (ketQua != null)
             {
-                Console.WriteLine("Tìm thấy thông tin sinh viên:");
+                Console.WriteLine("ĐÃ TÌM THẤY:");
                 ketQua.HienThi();
             }
             else
@@ -189,87 +266,133 @@ namespace Lab02_OOPBasics
             }
         }
 
-        // Bài 6: Lớp SanPham
+        // Bài 6: Lớp SanPham cho phép người dùng tự nhập
         static void Bai6()
         {
             Console.WriteLine("Bài 6: Quản lý đối tượng SanPham");
-            SanPham sp1 = new SanPham("SP01", "Laptop Dell", 15500000, 3);
-            SanPham sp2 = new SanPham("SP02", "Chuột Logitech", 350000, 10);
-            
-            Console.WriteLine("Thông tin sản phẩm và tính thành tiền:");
-            sp1.HienThi();
-            sp2.HienThi();
-
-            Console.WriteLine("\nKiểm tra ràng buộc đơn giá âm (-50000):");
             try
             {
-                SanPham spLoi = new SanPham("SP03", "Bàn phím", -50000, 2);
+                SanPham sp = new SanPham();
+                Console.Write("Nhập mã sản phẩm: ");
+                string? ma = Console.ReadLine();
+                sp.MaSP = string.IsNullOrWhiteSpace(ma) ? "SP01" : ma;
+
+                Console.Write("Nhập tên sản phẩm: ");
+                string? ten = Console.ReadLine();
+                sp.TenSP = string.IsNullOrWhiteSpace(ten) ? "Laptop Asus" : ten;
+
+                Console.Write("Nhập đơn giá (VNĐ): ");
+                string? giaStr = Console.ReadLine();
+                sp.DonGia = string.IsNullOrWhiteSpace(giaStr) ? 15000000 : double.Parse(giaStr);
+
+                Console.Write("Nhập số lượng: ");
+                string? slStr = Console.ReadLine();
+                sp.SoLuong = string.IsNullOrWhiteSpace(slStr) ? 2 : int.Parse(slStr);
+
+                Console.WriteLine("\nThông tin sản phẩm và thành tiền:");
+                sp.HienThi();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Bắt lỗi thành công: " + ex.Message);
+                Console.WriteLine("Lỗi nhập sản phẩm: " + ex.Message);
             }
         }
 
-        // Bài 7: Lớp TaiKhoanNganHang
+        // Bài 7: Lớp TaiKhoanNganHang có tương tác nạp, rút, chuyển
         static void Bai7()
         {
             Console.WriteLine("Bài 7: Nghiệp vụ tài khoản ngân hàng");
             TaiKhoanNganHang tk1 = new TaiKhoanNganHang("1022334455", "Phan Văn Thắng", 5000000);
             TaiKhoanNganHang tk2 = new TaiKhoanNganHang("9876543210", "Trần Thị Bình", 1000000);
 
-            Console.WriteLine("Trạng thái ban đầu:");
+            Console.WriteLine("Tài khoản của bạn:");
             tk1.HienThi();
-            tk2.HienThi();
 
-            Console.WriteLine("\n1. Thực hiện nạp thêm 2,000,000 VNĐ vào TK 1:");
-            tk1.NapTien(2000000);
+            Console.WriteLine("\n--- MENU GIAO DỊCH TÀI KHOẢN ---");
+            Console.WriteLine("1. Nạp tiền vào tài khoản");
+            Console.WriteLine("2. Rút tiền từ tài khoản");
+            Console.WriteLine("3. Chuyển tiền tới tài khoản Trần Thị Bình (9876543210)");
+            Console.Write("Chọn giao dịch (1-3, hoặc phím khác để bỏ qua): ");
+            string? gd = Console.ReadLine();
 
-            Console.WriteLine("\n2. Thực hiện rút 1,500,000 VNĐ từ TK 1:");
-            tk1.RutTien(1500000);
+            switch (gd)
+            {
+                case "1":
+                    Console.Write("Nhập số tiền muốn nạp: ");
+                    if (double.TryParse(Console.ReadLine(), out double tienNap))
+                        tk1.NapTien(tienNap);
+                    break;
+                case "2":
+                    Console.Write("Nhập số tiền muốn rút: ");
+                    if (double.TryParse(Console.ReadLine(), out double tienRut))
+                        tk1.RutTien(tienRut);
+                    break;
+                case "3":
+                    Console.Write("Nhập số tiền muốn chuyển: ");
+                    if (double.TryParse(Console.ReadLine(), out double tienChuyen))
+                        tk1.ChuyenTien(tk2, tienChuyen);
+                    break;
+            }
 
-            Console.WriteLine("\n3. Chuyển 3,000,000 VNĐ từ TK 1 sang TK 2:");
-            tk1.ChuyenTien(tk2, 3000000);
-
-            Console.WriteLine("\nTrạng thái sau giao dịch:");
+            Console.WriteLine("\nSố dư tài khoản sau thao tác:");
             tk1.HienThi();
-            tk2.HienThi();
         }
 
-        // Bài 8: Lớp NhanVien
+        // Bài 8: Lớp NhanVien cho phép tự nhập thông tin
         static void Bai8()
         {
             Console.WriteLine("Bài 8: Quản lý nhân viên và tính lương");
-            List<NhanVien> dsNV = new List<NhanVien>()
-            {
-                new NhanVien("NV01", "Hoàng Văn Tuấn", 5000000, 2.34, 1500000),
-                new NhanVien("NV02", "Lê Thanh Hương", 5000000, 3.00, 2000000),
-                new NhanVien("NV03", "Đỗ Hải Nam", 4500000, 1.80, 800000)
-            };
-
-            Console.WriteLine("Bảng lương nhân viên:");
-            foreach (var nv in dsNV)
-            {
-                nv.InBangLuong();
-            }
-        }
-
-        // Bài 9: Lớp HinhChuNhat
-        static void Bai9()
-        {
-            Console.WriteLine("Bài 9: Tính chu vi và diện tích hình chữ nhật");
-            HinhChuNhat hcn1 = new HinhChuNhat(12.5, 6.0);
-            Console.WriteLine("Hình chữ nhật 1 (Dài 12.5, Rộng 6.0):");
-            hcn1.HienThi();
-
-            Console.WriteLine("\nKiểm tra gán chiều rộng không hợp lệ (-3):");
             try
             {
-                hcn1.ChieuRong = -3;
+                NhanVien nv = new NhanVien();
+                Console.Write("Nhập mã nhân viên: ");
+                string? ma = Console.ReadLine();
+                nv.MaNV = string.IsNullOrWhiteSpace(ma) ? "NV01" : ma;
+
+                Console.Write("Nhập họ tên nhân viên: ");
+                string? ten = Console.ReadLine();
+                nv.HoTen = string.IsNullOrWhiteSpace(ten) ? "Hoàng Văn Tuấn" : ten;
+
+                Console.Write("Nhập lương cơ bản (VNĐ): ");
+                string? lcbStr = Console.ReadLine();
+                nv.LuongCoBan = string.IsNullOrWhiteSpace(lcbStr) ? 5000000 : double.Parse(lcbStr);
+
+                Console.Write("Nhập hệ số lương: ");
+                string? hsStr = Console.ReadLine();
+                nv.HeSoLuong = string.IsNullOrWhiteSpace(hsStr) ? 2.34 : double.Parse(hsStr);
+
+                Console.Write("Nhập phụ cấp (VNĐ): ");
+                string? pcStr = Console.ReadLine();
+                nv.PhuCap = string.IsNullOrWhiteSpace(pcStr) ? 1000000 : double.Parse(pcStr);
+
+                Console.WriteLine("\nBảng lương chi tiết:");
+                nv.InBangLuong();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Bắt lỗi thành công: " + ex.Message);
+                Console.WriteLine("Lỗi nhập nhân viên: " + ex.Message);
+            }
+        }
+
+        // Bài 9: Lớp HinhChuNhat cho phép người dùng tự nhập chiều dài và chiều rộng
+        static void Bai9()
+        {
+            Console.WriteLine("Bài 9: Tính chu vi và diện tích hình chữ nhật");
+            try
+            {
+                Console.Write("Nhập chiều dài: ");
+                double dai = double.Parse(Console.ReadLine()!);
+
+                Console.Write("Nhập chiều rộng: ");
+                double rong = double.Parse(Console.ReadLine()!);
+
+                HinhChuNhat hcn = new HinhChuNhat(dai, rong);
+                Console.WriteLine("\nKết quả tính toán:");
+                hcn.HienThi();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi kích thước hình chữ nhật: " + ex.Message);
             }
         }
 
