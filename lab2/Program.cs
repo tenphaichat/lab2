@@ -101,15 +101,15 @@ namespace Lab02_OOPBasics
             try
             {
                 SinhVien sv = new SinhVien();
-                Console.Write("Nhập mã sinh viên (mặc định: SV01): ");
+                Console.Write("Nhập mã sinh viên: ");
                 string? ma = Console.ReadLine();
                 sv.MaSV = string.IsNullOrWhiteSpace(ma) ? "SV01" : ma;
 
-                Console.Write("Nhập họ và tên (mặc định: Phan Văn Thắng): ");
+                Console.Write("Nhập họ và tên: ");
                 string? ten = Console.ReadLine();
                 sv.HoTen = string.IsNullOrWhiteSpace(ten) ? "Phan Văn Thắng" : ten;
 
-                Console.Write("Nhập ngày sinh (dd/MM/yyyy, mặc định: 26/03/2006): ");
+                Console.Write("Nhập ngày sinh (dd/MM/yyyy): ");
                 string? nsInput = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(nsInput))
                 {
@@ -120,7 +120,7 @@ namespace Lab02_OOPBasics
                     sv.NgaySinh = DateTime.ParseExact(nsInput.Trim(), "dd/MM/yyyy", null);
                 }
 
-                Console.Write("Nhập điểm trung bình (0 - 10, mặc định: 8.5): ");
+                Console.Write("Nhập điểm trung bình (0 - 10): ");
                 string? dtbInput = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(dtbInput))
                 {
